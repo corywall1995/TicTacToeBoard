@@ -19,16 +19,12 @@ TicTacToeBoard::TicTacToeBoard()
 **/
 Piece TicTacToeBoard::toggleTurn()
 {
-  switch(turn) {
-    case X:
-      return O;
-      break;
-    case O:
-      return X;
-      break;
-    default:
-      return Invalid;
-      break;
+  if(turn == X) {
+    turn = O;
+    return turn;
+  } else {
+    turn = X;
+    return turn;
   }
 }
 
@@ -43,19 +39,17 @@ Piece TicTacToeBoard::toggleTurn()
 **/ 
 Piece TicTacToeBoard::placePiece(int row, int column)
 {
-  if(row > 2 || column > 2 || row < 0 || column < 0) {
+  Piece temp = getPiece(row, column);
+  if(temp == Invalid) {
     return Invalid;
-  }
-  if(board[row][column] != Blank) {
-    return board[row][column];
-  }
-  if(board[row][column] == Blank) {
+  } else if(temp == Blank) {
     board[row][column] = turn;
     Piece temp = turn;
     toggleTurn();
     return temp;
+  } else {
+    return board[row][column];
   }
-  return Invalid;
 }
 
 /**
@@ -64,7 +58,11 @@ Piece TicTacToeBoard::placePiece(int row, int column)
 **/
 Piece TicTacToeBoard::getPiece(int row, int column)
 {
-  return Invalid;
+  if (row > 2 || row < 0 || column > 2 || column < 0) {
+    return Invalid;
+  } else {
+    return board[row][column];
+  }
 }
 
 /**
@@ -73,5 +71,49 @@ Piece TicTacToeBoard::getPiece(int row, int column)
 **/
 Piece TicTacToeBoard::getWinner()
 {
+  Piece temp = getPiece(0,0);
+  
+  if(temp == getPiece(0,1) && temp == getPiece(0,2) && temp != Blank) {
+    return temp;
+  } else if(temp == getPiece(1,1) && temp == getPiece(2,2) && temp != Blank) {
+    return temp;
+  } else if(temp == getPiece(1,0) && temp == getPiece(2,0) && temp != Blank) {
+    return temp;
+  } 
+  
+  temp = getPiece(1,0);
+  if(temp == getPiece(1,1) && temp == getPiece(1,2) && temp != Blank) {
+    return temp;
+  }
+  
+  temp = getPiece(2,0);
+  if(temp == getPiece(2,1) && temp == getPiece(2,2) && temp != Blank) {
+    return temp;
+  } else if(temp == getPiece(1,1) && temp == getPiece(0,2) && temp != Blank) {
+    return temp;
+  }
+  
+  temp = getPiece(0,1);
+  if(temp == getPiece(1,1) && temp == getPiece(2,1) && temp != Blank) {
+    return temp;
+  }
+  
+  temp = getPiece(0,2);
+  if(temp == getPiece(1,2) && temp == getPiece(2,2) && temp != Blank) {
+    return temp;
+  }
+  
+  int blankCount = 0;
+  
+  for(int i=0; i<BOARDSIZE; i++)
+    for(int j=0; j<BOARDSIZE; j++)
+      if (board[i][j] == Blank)
+        blankCount++;
+        
+  if(blankCount == 0) {
+    return Blank;
+  }
+  
+  
   return Invalid;
 }
